@@ -1,0 +1,36 @@
+const用法
+
+修饰变量
+变量不可被改动
+char greeting[ ] = “hello”;
+char const *p = greeting;	//non-const pointer const data
+const char *p = greeting;	//non-const pointer const data
+char * const p = greeting;	//const pointer non-const data
+const char * const p = greeting;	//const pointer const data;
+
+const 出现在星号左边: 指针指的数据是常量
+const 出现在星号右边: 指针本身是常量
+
+STL迭代器类似指针,作用如同 T*
+声明迭代器为const如同声明指针为const, 即指针为常量,不可指向其他数据, 但指向的数据可以改变,即 T* const p
+如果希望迭代器指向的数据不可变,即 const T* p,需要用 const_iterator
+std::vector<int> vec;
+const std::vector<int>::iterator iter = vec.begin( );		//T* const p
+*iter = 10;		//ok
+iter++;			//error
+std::vector<int>::const_iterator cIter;		//const T* p
+*cIter = 10;		//error
+cIter++;		//ok
+
+
+在函数中可以修饰参数,返回值,函数本身
+修饰返回值
+class Rational{…};
+const Rational operator* (const Rational& lhs, const Rational& rhs);
+可以避免如下错误
+Rational a,b,c;
+(a*b) = c;
+修饰参数
+参数不会被函数改变
+修饰成员函数
+只有被const修饰的成员函数才可以被const对象调用
