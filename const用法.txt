@@ -30,7 +30,17 @@ const Rational operator* (const Rational& lhs, const Rational& rhs);
 可以避免如下错误
 Rational a,b,c;
 (a*b) = c;
+一般情况下，函数返回值为某个对象时，如果将其声明为const，多用于操作符重载
 修饰参数
 参数不会被函数改变
 修饰成员函数
 只有被const修饰的成员函数才可以被const对象调用
+const成员函数中不允许对成员进行修改
+如果成员变量被mutable修饰，就可以被const成员函数修改
+如果成员是指针，const成员函数可以修改指针指向的内容，如
+char* m_sName;
+void setName(const string &s) const
+{
+	m_sName = s.c_str();	//error
+	m_sName[1] = s[1];		//ok
+}
