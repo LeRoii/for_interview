@@ -47,7 +47,7 @@ list适用：对象数量变化大，结构复杂，插入删除频繁<br>
 
 
 场景：<br>
-1.写一个c模块供以后使用,源文件事先编译好
+1.写一个c模块供以后使用,源文件事先编译好<br>
 ```c
 #ifdef __cplusplus
 extern “C”{
@@ -58,7 +58,7 @@ extern “C”{
 #endif
 ```
 
-2.模块已经存在,在cpp代码中
+2.模块已经存在,在cpp代码中<br>
 ```cpp
 extern “C”{
 #include “module_written_in_c.h”
@@ -66,7 +66,53 @@ int funcInC(int);
 }
 ```
 
+#### * const用法<br>
+```cpp
+char greeting[ ] = “hello”;
+char const *p = greeting;   //non-const pointer const data
+const char *p = greeting;   //non-const pointer const data
+char * const p = greeting;  //const pointer non-const data
+const char * const p = greeting;    //const pointer const data;
+```
+
+**const出现在星号左边，指针指的数据是变量**<br>
+**const出现在星号右边，指针本身是常量**<br>
 
 
+STL迭代器类似指针,作用如同 T*<br>
+声明迭代器为const如同声明指针为const, 即指针为常量,不可指向其他数据, <br>但指向的数据可以改变,即 T* const p<br>
+如果希望迭代器指向的数据不可变,即 const T* p,需要用 const_iterator<br>
+```cpp
+std::vector<int> vec;
+const std::vector<int>::iterator iter = vec.begin( );       //T* const p
+*iter = 10;     //ok
+iter++;         //error
+std::vector<int>::const_iterator cIter;     //const T* p
+*cIter = 10;        //error
+cIter++;        //ok
+```
+
+const可以修饰：<br>
+1. 局部和全局变量：变量值不会变<br>
+2. 函数参数：参数不会被函数改变<br>
+3. 函数返回值：返回值不能做为左值，多用于操作符重载，避免出现如下错误<br>
+```cpp
+class Rational{…};
+const Rational operator* (const Rational& lhs, const Rational& rhs);
+Rational a,b,c;
+(a*b) = c;
+```
+4. 类的成员函数本身：只有被const修饰的成员函数才可以被const对象调用<br>
+const成员函数中不允许对成员进行修改<br>
+如果成员变量被mutable修饰，就可以被const成员函数修改<br>
+如果成员是指针，const成员函数可以修改指针指向的内容，如<br>
+```cpp
+har* m_sName;
+void setName(const string &s) const
+{
+    m_sName = s.c_str();    //error
+    m_sName[1] = s[1];      //ok
+}
+```
 
 
